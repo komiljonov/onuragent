@@ -23,7 +23,7 @@ const useTelegramBackButton = () => {
             }
 
         } catch (error) {
-            console.error("Telegram WebApp is not available", error);
+            alert("Telegram WebApp is not available");
         }
 
         // Cleanup when the component unmounts
