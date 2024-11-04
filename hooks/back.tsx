@@ -22,7 +22,7 @@ const useTelegramBackButton = () => {
                 tele.BackButton.hide();
             }
 
-        } catch (error) {
+        } catch {
             alert("Telegram WebApp is not available");
         }
 
