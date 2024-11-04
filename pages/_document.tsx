@@ -3,7 +3,12 @@ import { Html, Head, Main, NextScript } from "next/document";
 export default function Document() {
   return (
     <Html lang="en">
-      <Head />
+      <Head>
+        <script
+          src="https://telegram.org/js/telegram-web-app.js"
+          async
+        ></script>
+      </Head>
       <body className="antialiased">
         <Main />
         <NextScript />

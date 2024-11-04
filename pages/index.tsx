@@ -1,115 +1,130 @@
-import Image from "next/image";
-import localFont from "next/font/local";
+"use client";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Phone } from "lucide-react";
+import Link from "next/link";
+import request from "@/lib/request";
+import { useUser } from "@/hooks/auth";
+import { Badge } from "@/components/ui/badge";
 
-export default function Home() {
+interface User {
+  id: string;
+  name: string;
+  phone_number: string;
+  balance: number;
+}
+
+interface UsersResponse {
+  users: User[];
+}
+
+const fetchUsers = async (userId: number): Promise<UsersResponse> => {
+  const { data } = await request.get(`/counterparties/${userId}`);
+  return data;
+};
+
+const getBalanceBadgeColor = (balance: number) => {
+  if (balance > 0) return "text-green-600 bg-green-100"
+  if (balance < 0) return "text-red-600 bg-red-100"
+  return "text-gray-600 bg-gray-100"
+}
+
+function UserCard({ user }: { user: User }) {
+  const { userId } = useUser()!;
   return (
-    <div
-      className={`${geistSans.variable} ${geistMono.variable} grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]`}
-    >
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              pages/index.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <Card className="w-full">
+      <CardContent className="pt-6">
+        <Link href={`/info?userId=${userId}&id=${user.id}`}>
+          <h3 className="text-lg font-semibold mb-2">{user.name}</h3>
+          <p className="text-sm text-muted-foreground mb-1">ID: {user.id}</p>
+          <div className="flex justify-between mb-2">
+            <span className="text-sm">Telefon raqami: {user.phone_number}</span>
+            <span className="text-sm">Balans:  <Badge variant="secondary" className={`${getBalanceBadgeColor(-user.balance)}`}>
+              ${Math.abs(user.balance)}{" "}
+            </Badge></span>
+          </div>
+        </Link>
+      </CardContent>
+      <CardFooter>
+        <Button
+          className="w-full"
+          onClick={() => window.open(`tel:${user.phone_number}`)}
+        >
+          <Phone className="mr-2 h-4 w-4" /> Bog'lanish
+        </Button>
+      </CardFooter>
+    </Card>
+  );
+}
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+function UserCardSkeleton() {
+  return (
+    <Card className="w-full">
+      <CardContent className="pt-6">
+        <Skeleton className="h-6 w-3/4 mb-2" />
+        <Skeleton className="h-4 w-1/2 mb-1" />
+        <div className="flex justify-between mb-2">
+          <Skeleton className="h-4 w-1/4" />
+          <Skeleton className="h-4 w-1/4" />
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </CardContent>
+      <CardFooter>
+        <Skeleton className="h-10 w-full" />
+      </CardFooter>
+    </Card>
+  );
+}
+
+function Users() {
+  const { userId } = useUser()!;
+  const [search, setSearch] = useState("");
+
+  const { data, status, isLoading } = useQuery<UsersResponse>({
+    queryKey: ["users", userId],
+    queryFn: () => fetchUsers(userId!),
+    enabled: !!userId,
+  });
+
+  return (
+    <div className="container mx-auto">
+      <Input
+        className="mb-4"
+        placeholder="Kontragentlarni qidirish"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {isLoading ? (
+          Array.from({ length: 6 }).map((_, index) => (
+            <UserCardSkeleton key={index} />
+          ))
+        ) : status === "error" ? (
+          <div className="col-span-full text-center text-red-500">
+            Error fetching users
+          </div>
+        ) : (
+          <>
+            {data?.users.filter((user) => { return user.name.toLowerCase().includes(search.toLowerCase()) || user.id.toLowerCase().includes(search.toLowerCase()) }).map((user) => <UserCard key={user.id} user={user} />)}
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default function Page() {
+  return (
+    <div className="container mx-auto">
+      <h1 className="text-3xl font-bold mb-8">
+        Foydalanuvchilar ro&apos;yxati
+      </h1>
+      <Users />
     </div>
   );
 }
