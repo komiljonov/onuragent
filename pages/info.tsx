@@ -11,6 +11,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { Card } from "@/components/ui/card"
 // import IOrder from "@/lib/types/order"
 import OrderDisplay from "@/components/orders"
+import useTelegramBackButton from "@/hooks/back"
 
 
 interface IUser {
@@ -104,7 +105,9 @@ function UserInfoSkeleton() {
 }
 
 function UserInfoPage() {
-  const { query: { id } } = useRouter()
+  const { query: { id } } = useRouter();
+
+  useTelegramBackButton();
 
   // const { data: orders, isLoading: isLoadingOrders } = useQuery({
   //   queryKey: ['orders', id],
