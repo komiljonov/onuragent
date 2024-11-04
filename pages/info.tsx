@@ -107,7 +107,7 @@ function UserInfoSkeleton() {
 function UserInfoPage() {
   const { query: { id } } = useRouter();
 
-  useTelegramBackButton();
+
 
   // const { data: orders, isLoading: isLoadingOrders } = useQuery({
   //   queryKey: ['orders', id],
@@ -222,6 +222,8 @@ function UserInfoPage() {
 }
 
 export default function Page() {
+  useTelegramBackButton();
+
   return (
     <div className="container mx-auto">
       <h1 className="text-2xl font-bold mb-4">Foydalanuvchi malumotlari</h1>
