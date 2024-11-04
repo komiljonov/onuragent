@@ -42,17 +42,19 @@ function UserCard({ user }: { user: User }) {
         <Link href={`/info?userId=${userId}&id=${user.id}`}>
           <h3 className="text-lg font-semibold mb-2">{user.name}</h3>
           <p className="text-sm text-muted-foreground mb-1">ID: {user.id}</p>
-          <div className="flex justify-between mb-2">
-            <span className="text-sm">Telefon raqami: {user.phone_number}</span>
-            <span className="text-sm">Balans:  <Badge variant="secondary" className={`${getBalanceBadgeColor(-user.balance)}`}>
-              ${Math.abs(user.balance)}{" "}
-            </Badge></span>
-          </div>
+
+          {/* <div className="flex justify-between mb-2"> */}
+          <p className="text-sm">Telefon raqami: {user.phone_number}</p>
+          <p className="text-sm">Balans:  <Badge variant="secondary" className={`${getBalanceBadgeColor(-user.balance)}`}>
+            ${Math.abs(user.balance)}{" "}
+          </Badge></p>
+          {/* </div> */}
+
         </Link>
       </CardContent>
       <CardFooter>
         <Button
-          className="w-full"
+          className="w-full bg-[rgb(4,154,0)]"
           onClick={() => window.open(`tel:${user.phone_number}`)}
         >
           <Phone className="mr-2 h-4 w-4" /> Bog'lanish
@@ -110,7 +112,7 @@ function Users() {
           </div>
         ) : (
           <>
-            {data?.users.filter((user) => { return user.name.toLowerCase().includes(search.toLowerCase()) || user.id.toLowerCase().includes(search.toLowerCase()) }).map((user) => <UserCard key={user.id} user={user} />)}
+            {data?.users.filter((user) => { return user.name.toLowerCase().includes(search.toLowerCase()) || user.id.toLowerCase().includes(search.toLowerCase()) || user.phone_number.toLowerCase().includes(search.toLowerCase()) }).map((user) => <UserCard key={user.id} user={user} />)}
           </>
         )}
       </div>
