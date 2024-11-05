@@ -3,12 +3,11 @@
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useRouter } from "next/router"
 import { useQuery } from "@tanstack/react-query"
 import request from "@/lib/request"
 import { Skeleton } from "@/components/ui/skeleton"
-import { Card } from "@/components/ui/card"
+// import { Card } from "@/components/ui/card"
 // import IOrder from "@/lib/types/order"
 import OrderDisplay from "@/components/orders"
 import useTelegramBackButton from "@/hooks/back"
@@ -40,7 +39,7 @@ const fetchCounterParty = async (counterPartyId: string): Promise<IUser> => {
   return data
 }
 
-function UserInfoSkeleton() {
+export function UserInfoSkeleton() {
   return (
     <div className="container mx-auto p-4 space-y-8">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -66,7 +65,7 @@ function UserInfoSkeleton() {
         </div>
       </div>
 
-      <Tabs defaultValue="orders" className="space-y-4">
+      {/* <Tabs defaultValue="orders" className="space-y-4">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="orders">Orders</TabsTrigger>
           <TabsTrigger value="payments">Payments</TabsTrigger>
@@ -99,7 +98,7 @@ function UserInfoSkeleton() {
             </div>
           </Card>
         </TabsContent>
-      </Tabs>
+      </Tabs> */}
     </div>
   )
 }
