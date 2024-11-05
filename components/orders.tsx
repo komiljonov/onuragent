@@ -13,6 +13,7 @@ import IOrder from "@/lib/types/order"
 import request from "@/lib/request"
 import { parseDateString } from '@/lib/utils'
 import { useUser } from '@/hooks/auth'
+import { Skeleton } from './ui/skeleton'
 
 function toBase64(str: string) {
     const bytes = new TextEncoder().encode(str)
@@ -91,40 +92,76 @@ export default function OrderDisplay({ counterPartyId }: { counterPartyId: strin
         setStartDate(undefined)
         setEndDate(undefined)
     }
-
-    if (isLoading) return <div>Loading orders...</div>
+    const [filterByPeriod, setFilterByPeriod] = useState<boolean>(false)
+    if (isLoading) return <div>
+        {/* <Tabs defaultValue="orders" className="space-y-4"> */}
+        {/* <TabsContent value="orders"> */}
+          <Skeleton className="h-8 w-40 mb-4" />
+          <Card>
+            <div className="p-4">
+              {[...Array(5)].map((_, i) => (
+                <div key={i} className="flex justify-between items-center py-2">
+                  <Skeleton className="h-4 w-20" />
+                  <Skeleton className="h-4 w-24" />
+                  <Skeleton className="h-4 w-16" />
+                </div>
+              ))}
+            </div>
+          </Card>
+        {/* </TabsContent> */}
+        {/* <TabsContent value="payments"> */}
+          {/* <Skeleton className="h-8 w-40 mb-4" />
+          <Card>
+            <div className="p-4">
+              {[...Array(5)].map((_, i) => (
+                <div key={i} className="flex justify-between items-center py-2">
+                  <Skeleton className="h-4 w-20" />
+                  <Skeleton className="h-4 w-24" />
+                  <Skeleton className="h-4 w-16" />
+                </div>
+              ))}
+            </div>
+          </Card> */}
+        {/* </TabsContent> */}
+      {/* </Tabs> */}
+    </div>
 
     return (
         <div className="container mx-auto space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 relative">
                 <div>
                     <Label htmlFor="id-filter">ID bo'yicha</Label>
-                    <Input
-                        id="id-filter"
-                        value={idFilter}
-                        onChange={(e) => setIdFilter(e.target.value)}
-                        placeholder="Buyurtma raqamini kiriting"
-                    />
+                    <div className='flex gap-1'>
+                        <Input
+                            id="id-filter"
+                            value={idFilter}
+                            onChange={(e) => setIdFilter(e.target.value)}
+                            placeholder="Buyurtma raqamini kiriting"
+                        />
+                        <Button onClick={()=>setFilterByPeriod(!filterByPeriod)}>Filter</Button>
+                    </div>
                 </div>
-                <div>
-                    <Label>Dan</Label>
-                    <DatePicker date={startDate} setDate={setStartDate} />
-                </div>
-                <div>
-                    <Label>Gacha</Label>
-                    <DatePicker date={endDate} setDate={setEndDate} />
-                </div>
+                {filterByPeriod && <div className='bg-white w-full border p-3 rounded-md shadow-md'>
+                    <div>
+                        <Label>Dan</Label>
+                        <DatePicker date={startDate} setDate={setStartDate} />
+                    </div>
+                    <div>
+                        <Label>Gacha</Label>
+                        <DatePicker date={endDate} setDate={setEndDate} />
+                    </div>
+                </div>}
             </div>
 
-            <div className="flex justify-end">
+            {(startDate || endDate || idFilter) && <div className="flex justify-end">
                 <Button onClick={clearFilters} variant="outline" className="flex items-center">
                     <X className="w-4 h-4 mr-2" />
                     Tozalash
                 </Button>
-            </div>
+            </div>}
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredOrders?.map((order) => (
+                {filteredOrders?.length ? filteredOrders?.map((order) => (
                     <Card key={order.id} className="flex flex-col">
                         <CardHeader>
                             <CardTitle className="flex justify-between items-center">
@@ -154,7 +191,7 @@ export default function OrderDisplay({ counterPartyId }: { counterPartyId: strin
                             </Button>
                         </CardFooter>
                     </Card>
-                ))}
+                )) : <span>Hech qanday buyurtma topilmadi!</span>}
             </div>
         </div>
     )
