@@ -139,6 +139,9 @@ export default function OrderDisplay({ counterPartyId }: { counterPartyId: strin
                             <p className="text-sm text-gray-500 mb-4">
                                 Yetkazib berish: {order.shipment_date}
                             </p>
+                            <p className="text-sm text-gray-500 mb-4">
+                                Holati: {order.status}
+                            </p>
                         </CardContent>
                         <CardFooter>
                             <Button

@@ -7,6 +7,7 @@ import User from "./user";
 interface IOrderItem {
     id: string;
     name: string;
+    
     count: number;
     price: number;
     sum: number;
@@ -20,6 +21,7 @@ type IOrder = {
     created_at: string;
     shipment_date: string;
     price: number;
+    status: string;
     counterparty: User;
     products: IOrderItem[];
 };
