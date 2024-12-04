@@ -112,7 +112,7 @@ function Users() {
           </div>
         ) : (
           <>
-            {data?.users.filter((user) => { return user.name.toLowerCase().includes(search.toLowerCase()) || user.id.toLowerCase().includes(search.toLowerCase()) || user.phone_number.toLowerCase().includes(search.toLowerCase()) }).map((user) => <UserCard key={user.id} user={user} />)}
+            {data?.users.filter((user) => { return user.name?.toLowerCase().includes(search.toLowerCase()) || user.id?.toLowerCase().includes(search.toLowerCase()) || user.phone_number?.toLowerCase().includes(search.toLowerCase()) }).map((user) => <UserCard key={user.id} user={user} />)}
           </>
         )}
       </div>
